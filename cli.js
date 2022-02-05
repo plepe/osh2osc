@@ -150,5 +150,5 @@ function printItem (item) {
 }
 
 function xmlstr (str) {
-  return '"' + str.replace(/"/g, '\\"') + '"'
+  return '"' + str.replace(/"/g, '&quot;').replace(/>/g, '&gt;').replace(/</g, '&lt;').replace(/&/g, '&amp;') + '"'
 }
