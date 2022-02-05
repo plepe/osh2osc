@@ -10,6 +10,7 @@ const changesets = {}
 const known = { node: {}, way: {}, relation: {} }
  
 const changesetActions = ['create', 'modify', 'delete']
+const typeOrder = ['node', 'way', 'relation']
 
 stream.on('tag:node', (item) => {
   add(item)
@@ -44,7 +45,8 @@ function add (item) {
   }
 }
 
-let currentSection = null
+let currentAction = null
+let currentSection = {}
 
 stream.on('end', (item) => {
   console.log("<?xml version='1.0' encoding='UTF-8'?>")
@@ -54,29 +56,53 @@ stream.on('end', (item) => {
     const changeset = changesets[id]
 
     changesetActions.forEach(action => {
+
       if (changeset[action].length) {
         startSection(action)
-        changeset[action].forEach(item => printItem(item))
+        changeset[action].forEach(item => sectionAdd(item))
       }
     })
   })
 
-  if (currentSection) {
-    console.log('  </' + currentSection + '>')
+  if (currentAction) {
+    printAction()
   }
 
   console.log('</osmChange>')
 })
 
+function sectionAdd (item) {
+  if (!(item.$name in currentSection)) {
+    currentSection[item.$name] = []
+  }
+
+  currentSection[item.$name].push(item)
+}
+
 function startSection (action) {
-  if (currentSection === action) {
+  if (currentAction === action) {
     return
   }
-  if (currentSection !== null) {
-    console.log('  </' + currentSection + '>')
+
+  if (currentAction !== null) {
+    printAction()
   }
-  console.log('  <' + action + '>')
-  currentSection = action
+
+  currentAction = action
+}
+
+function printAction () {
+  console.log('  <' + currentAction + '>')
+
+  typeOrder.forEach(type => {
+    if (type in currentSection) {
+      currentSection[type].forEach(item => printItem(item))
+    }
+  })
+
+  currentSection = {}
+
+  console.log('  </' + currentAction + '>')
 }
 
 function printItem (item) {
