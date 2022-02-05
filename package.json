@@ -4,7 +4,7 @@
   "description": "Convert an OpenStreetMap .osc (OSM with History) to .osc (OSM Changeset)",
   "main": "index.js",
   "scripts": {
-    "lint": "standard --fix cli.js"
+    "lint": "standard --fix cli.js src/*.js"
   },
   "repository": {
     "type": "git",
