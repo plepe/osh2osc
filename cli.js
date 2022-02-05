@@ -1,3 +1,12 @@
+#!/usr/bin/env node
+const ArgumentParser = require('argparse').ArgumentParser
+const parser = new ArgumentParser({
+  add_help: true,
+  description: 'Convert an OpenStreetMap .osc (OSM with History) to .osc (OSM Changeset). It will read a file "input.osh" and write to stdout.'
+})
+
+const args = parser.parse_args()
+
 const fs = require('fs')
 const flow = require('xml-flow')
 

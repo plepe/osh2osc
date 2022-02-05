@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/plepe/osh2osc#readme",
   "dependencies": {
+    "argparse": "^2.0.1",
     "xml-flow": "^1.0.4"
   },
   "devDependencies": {
