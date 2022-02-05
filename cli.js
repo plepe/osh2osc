@@ -126,6 +126,19 @@ function printItem (item) {
   } else if (item.tag) {
     children += '      <tag k=' + xmlstr(item.tag.k) + ' v=' + xmlstr(item.tag.v) + '/>\n'
   }
+
+  if (item.member) {
+    if (!Array.isArray(item.member)) {
+      item.member = [item.member]
+    }
+
+    item.member.forEach(m => {
+      children += '      <member ' +
+        Object.keys(m)
+          .map(k => k + '=' + xmlstr(m[k]))
+          .join(' ') + '/>\n'
+    })
+  }
   
   if (children) {
     str += '>\n' + children + '    </' + item.$name + '>'
