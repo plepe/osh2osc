@@ -2,7 +2,7 @@
   "name": "osh2osc",
   "version": "0.0.0",
   "description": "Convert an OpenStreetMap .osc (OSM with History) to .osc (OSM Changeset)",
-  "main": "index.js",
+  "bin": "./cli.js",
   "scripts": {
     "lint": "standard --fix cli.js src/*.js"
   },
