@@ -8,7 +8,7 @@ const stream = flow(input, {
 
 const changesets = {}
 const known = { node: {}, way: {}, relation: {} }
- 
+
 const changesetActions = ['create', 'modify', 'delete']
 const typeOrder = ['node', 'way', 'relation']
 
@@ -28,7 +28,9 @@ function add (item) {
   let changeset = changesets[item.$attrs.changeset]
   if (!changeset) {
     changeset = {}
-    changesetActions.forEach(action => changeset[action] = [])
+    changesetActions.forEach(action => {
+      changeset[action] = []
+    })
     changesets[item.$attrs.changeset] = changeset
   }
 
@@ -56,7 +58,6 @@ stream.on('end', (item) => {
     const changeset = changesets[id]
 
     changesetActions.forEach(action => {
-
       if (changeset[action].length) {
         startSection(action)
         changeset[action].forEach(item => sectionAdd(item))
@@ -139,7 +140,7 @@ function printItem (item) {
           .join(' ') + '/>\n'
     })
   }
-  
+
   if (children) {
     str += '>\n' + children + '    </' + item.$name + '>'
   } else {
