@@ -23,14 +23,14 @@ osmium tags-filter tmp1.osh.pbf wr/building nwr/amenity nwr/shop -o tmp2.osh.pbf
 osmium getid --add-referenced --id-osm-file tmp2.osh.pbf --with-history tmp1.osh.pbf -o final.osh
 ```
 
-Now, convert the final.osh to final.osc:
+Now, convert the final.osh to several files in the final directory:
 ```
-osh2osc -i final.osh -o final.osc
+osh2osc -i final.osh -o final
 ```
 
 Create an Overpass API database:
 ```
-cat final.osc | update_database --db-dir=database --keep-attic
+for i in final/*.osc ; do cat $i | update_database --db-dir=database --keep-attic ; done
 ```
 
 Example query:
