@@ -10,9 +10,9 @@ parser.add_argument('-i', '--input', {
   default: null
 })
 
-parser.add_argument('-o', '--output', {
-  help: 'File to write final data to, example: output.osc. If not specified, write to stdout.',
-  default: null
+parser.add_argument('-o', '--output-dir', {
+  help: 'Directory to write the changesets to.',
+  default: 'output'
 })
 
 const args = parser.parse_args()
@@ -25,22 +25,30 @@ const print = require('./src/print')
 
 const input = args.input ? fs.createReadStream(args.input) : process.stdin
 
+let fileId = 0
+const fileNameLength = 8
+
 parse(input, (err, changesets) => {
   if (err) { return console.error('Error parsing', err) }
 
-  sections(changesets, (err, sections) => {
-    if (err) { return console.error('Error creating sections', err) }
+  Object.keys(changesets).forEach(changeset => {
+    const d = {}
+    d[changeset] = changesets[changeset]
 
-    print(sections, (err, str) => {
-      if (err) { return console.error('Error printing result', err) }
+    sections(d, (err, sections) => {
+      if (err) { return console.error('Error creating sections', err) }
 
-      if (args.output) {
-        fs.writeFile(args.output, str, (err) => {
+      print(sections, (err, str) => {
+        if (err) { return console.error('Error printing result', err) }
+
+        fs.writeFile(args.output_dir + '/' + lpad(fileId++, '0', fileNameLength) + '.osc', str, (err) => {
           if (err) { return console.error('Error writing file', err) }
         })
-      } else {
-        console.log(str)
-      }
+      })
     })
   })
 })
+
+function lpad (str, pad = ' ', length = 0) {
+  return pad.repeat(length).substr(('' + str).length) + str
+}

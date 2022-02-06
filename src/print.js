@@ -4,8 +4,17 @@ module.exports = function print (sections, callback) {
   let str = "<?xml version='1.0' encoding='UTF-8'?>\n"
   str += "<osmChange version='0.6' generator='osh2osc'>\n"
 
-  sections.forEach(section => {
-    str += printSection(section)
+  defines.typeOrder.forEach(type => {
+    sections.forEach(section => {
+      if (type in section) {
+        const d = {
+          action: section.action
+        }
+        d[type] = section[type]
+
+        str += printSection(d)
+      }
+    })
   })
 
   str += '</osmChange>'
